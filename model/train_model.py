@@ -9,7 +9,7 @@ import json
 #-----------hyperparameters------------
 
 batch_size = 2    # chose small batch size as graphs when using large designs as data
-d_embd     = 64
+d_embd     = 128
 n_heads    = 4
 n_layers   = 4
 dropout    = 0.1
@@ -112,6 +112,7 @@ for epoch in range(n_epochs):
             losses = estimate_loss()
             print(f"epoch {epoch:03d} step {it:03d}: train {losses['train']:.4f} | val {losses['val']:.4f}")
 
+    torch.cuda.empty_cache()
 
 torch.save({
     'model_state': model.state_dict(),
