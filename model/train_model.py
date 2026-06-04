@@ -100,7 +100,7 @@ def estimate_loss():
             losses.append(loss.item())
 
             # relative error
-            rel_error = torch.abs(pred[mask] - batch.y[mask]) / (torch.abs(batch.y[mask]) + eps)
+            rel_error = torch.abs(pred[mask] - batch.y[mask]) / torch.abs(batch.y[mask])
             rel_errors.append(rel_error.mean(dim=0))  # per target
 
         out[split] = {
