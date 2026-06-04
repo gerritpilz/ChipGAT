@@ -5,13 +5,14 @@ from GAT_model import GAT_model
 import argparse
 import os
 import json
+from single_gat import GAT_model_single
 
 #-----------hyperparameters------------
 
 batch_size = 2    # chose small batch size as graphs when using large designs as data
-d_embd     = 64
-n_heads    = 4
-n_layers   = 4
+d_embd     = 128
+n_heads    = 6
+n_layers   = 6
 dropout    = 0.1
 
 lr         = 1e-3
@@ -53,7 +54,7 @@ val_loader   = DataLoader(val_data,   batch_size=batch_size, shuffle=False)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-model = GAT_model(
+model = GAT_model_single(
     n_cells=n_cells,
     n_features=n_features,
     n_targets=n_targets,
