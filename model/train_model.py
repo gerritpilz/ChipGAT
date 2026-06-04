@@ -30,7 +30,7 @@ args = parser.parse_args()
 dataset = []
 for f in os.listdir(args.pyg_datasets_dir):
     if f.endswith(".pt"):
-        dataset.append(torch.load(os.path.join(args.pyg_datasets_dir, f)))
+        dataset.append(torch.load(os.path.join(args.pyg_datasets_dir, f),  weights_only=False))
 
 with open(args.cell_to_idx) as f:
     cell_to_idx = json.load(f)
