@@ -129,7 +129,11 @@ for epoch in range(n_epochs):
 
         if it % eval_iter == 0:
             losses = estimate_loss()
-            print(f"epoch {epoch:03d} step {it:03d}: train {losses['train']:.4f} | val {losses['val']:.4f}")
+
+            print(f"train loss: {losses['train']['loss']:.4f} | val loss: {losses['val']['loss']:.4f}")
+
+            print(f"train rel error (%): {(losses['train']['rel_error'] * 100).cpu().numpy()}")
+            print(f"val rel error (%): {(losses['val']['rel_error'] * 100).cpu().numpy()}")
 
     torch.cuda.empty_cache()
 
