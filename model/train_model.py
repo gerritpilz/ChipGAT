@@ -35,13 +35,15 @@ for f in os.listdir(args.pyg_datasets_dir):
         data = torch.load(os.path.join(args.pyg_datasets_dir, f), weights_only=False)
         dataset.append(data)
 
+
 all_y = torch.cat([d.y for d in dataset], dim=0)
 
 y_mean = all_y.mean(dim=0)
-y_std = all_y.std(dim=0)
+y_std = torch.clamp(all_y.std(dim=0), min=1e-6)
 
 for d in dataset:
     d.y = (d.y - y_mean) / y_std
+
 
 
 
