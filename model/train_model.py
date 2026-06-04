@@ -12,7 +12,7 @@ from single_gat import GAT_model_single
 batch_size = 2    # chose small batch size as graphs when using large designs as data
 d_embd     = 64
 n_heads    = 4
-n_layers   = 4
+n_layers   = 6
 dropout    = 0.1
 
 lr         = 1e-3
@@ -102,7 +102,7 @@ def estimate_loss():
 
             # relative error
             rel_error = torch.abs(pred[mask] - batch.y[mask]) / torch.abs(batch.y[mask])
-            rel_errors.append(rel_error.mean(dim=0))  # per target
+            rel_errors.append(rel_error.mean(dim=0)[0])  # slack error
 
         out[split] = {
             'loss': sum(losses) / len(losses),
