@@ -32,7 +32,18 @@ args = parser.parse_args()
 dataset = []
 for f in os.listdir(args.pyg_datasets_dir):
     if f.endswith(".pt"):
-        dataset.append(torch.load(os.path.join(args.pyg_datasets_dir, f),  weights_only=False))
+        data = torch.load(os.path.join(args.pyg_datasets_dir, f), weights_only=False)
+        dataset.append(data)
+
+all_y = torch.cat([d.y for d in dataset], dim=0)
+
+y_mean = all_y.mean(dim=0)
+y_std = all_y.std(dim=0)
+
+for d in dataset:
+    d.y = (d.y - y_mean) / y_std
+
+
 
 with open(args.cell_to_idx) as f:
     cell_to_idx = json.load(f)
@@ -54,7 +65,7 @@ val_loader   = DataLoader(val_data,   batch_size=batch_size, shuffle=False)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-model = GAT_model_single(
+model = GAT_model(
     n_cells=n_cells,
     n_features=n_features,
     n_targets=n_targets,
@@ -132,9 +143,8 @@ for epoch in range(n_epochs):
             losses = estimate_loss()
 
             print(f"train loss: {losses['train']['loss']:.4f} | val loss: {losses['val']['loss']:.4f}")
-
-            print(f"train rel error (%): {(losses['train']['rel_error'] * 100).cpu().numpy()}")
             print(f"val rel error (%): {(losses['val']['rel_error'] * 100).cpu().numpy()}")
+            print("")
 
     torch.cuda.empty_cache()
 
