@@ -71,26 +71,41 @@ It serves as the primary target for identifying timing-critical regions of the d
 
 ### 2. Design Compilation
 
+All paths are relative to the repository root.
 
+For each design that should be part of the dataset, put all its Rtl files in a directory. 
+A generic sdc file is already included at Dataset/lib_sdc . 
+
+First, define the target clock in the SDC file:
 
 ```tcl
-create_clock -name clk -period <clock period> [get_ports <clock name in top module>]
+create_clock -name clk -period 10 [get_ports clk]
 ```
 
+where `clk` is the clock input of the top-level module and the period is specified in nanoseconds. Note that the pipeline also supports sampling different clock periods for the same design.
 
--period: set clock period (ns)
-[get_ports clk]: must match clock name in top module
 
-⚠ Must match RTL port name exactly, otherwise it won't work.
+Next, run the chip_run.py file:
 
-For each design that should be part of the dataset, put all verilog files in a directory. A generic sdc file is already included at Dataset/lib_sdc . Note that in the first line, 
+```bash
+python dataset/chip_run.py \
+  --rtl <rtl_files> \
+  --sdc <clk.sdc> \
+  --clk_period <clock_period_ns> \
+  --design <design_name> \
+  --top_module <top_module>
+```
 
+Example:
+
+```bash
 python3 Dataset/chip_run.py \
-  --rtl Dataset/Designs/slowfil/rtl/*.v \
-  --sdc Dataset/lib_sdc/clk10.sdc \
+  --rtl dataset/designs/slowfil/rtl/*.v \
+  --sdc dataset/lib_sdc/generic_clk.sdc \
   --clk_period 10 \
   --design slowfil \
   --top_module slowfil
+```
 
 
 
