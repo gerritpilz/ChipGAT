@@ -150,7 +150,8 @@ python dataset/run_openroad.py \
 
 ### 5. Dataset Construction
 
-This step produces a pyg_datasets/ directory, which contains the final PyTorch Geometric (.pt) graph files ready for training.
+This step produces a pyg_datasets/ directory containing the final PyTorch Geometric (.pt) graph files ready for training. Users should carefully inspect the logs, especially for NaN or infinite values, to verify that the dataset generation completed successfully and without numerical issues.
+
 
 ```bash
 python dataset/create_dataset.py \
@@ -177,13 +178,28 @@ python dataset/create_dataset.py \
   --cell_to_idx dataset/lib_sdc/cell_to_idx.json
 ```
 
+### 6. Model Training
 
+In this step, the model is trained on the previously created PyTorch Geometric (.pt) graph files. After the specified number of epochs, the trained model is saved in the checkpoints/ directory. During training, the current training and validation loss, as well as the absolute error of the criticality prediction, are printed to the terminal.
 
+Hyperparameters are set at the top of the train_model.py file and can be modified there.
+If different clock periods were used for at least one design, the --different_clk_periods flag should be enabled.
 
+´´´bash
+python model/model_train.py \
+  --pyg_datasets_dir <path_to_pyg_datasets> \
+  --cell_to_idx <path_to_cell_to_idx.json> \
+  --different_clk_periods
+  ´´´
 
+  Example: 
 
-
-
+´´´bash
+python model/model_train.py \
+  --pyg_datasets_dir pyg_datasets \
+  --cell_to_idx dataset/lib_sdc/cell_to_idx.json\
+  --different_clk_periods
+  ´´´
 
 
 
