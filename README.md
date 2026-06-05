@@ -64,12 +64,15 @@ The model performs node-level prediction of the minimal slack, the maximum rise/
 The criticality is computed as exp(-8 * (min slack / clk period)), which maps timing slack to a risk metric that increases as the available timing margin decreases. 
 It serves as the primary target for identifying timing-critical regions of the design and prioritizing pins with the highest likelihood of timing violations.
 
-### 6. Pedeicion 
+### 6. Prediction
 
 ## How to Use
 ### 1. Setup
 
 ### 2. Design Compilation
+
+````tcl
+create_clock -name clk -period 10.0 [get_ports clk]
 
 For each design that should be part of the dataset, put all verilog files in a directory. A generic sdc file is already included at Dataset/lib_sdc . Note that in the first line, 
 
