@@ -71,8 +71,13 @@ It serves as the primary target for identifying timing-critical regions of the d
 
 ### 2. Design Compilation
 
-````tcl
+```tcl
 create_clock -name clk -period 10.0 [get_ports clk]
+```
+-period: set clock period (ns)
+[get_ports clk]: must match clock name in top module
+
+⚠ Must match RTL port name exactly, otherwise it won't work.
 
 For each design that should be part of the dataset, put all verilog files in a directory. A generic sdc file is already included at Dataset/lib_sdc . Note that in the first line, 
 
