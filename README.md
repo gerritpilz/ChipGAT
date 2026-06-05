@@ -44,9 +44,9 @@ A dataset builder merges all extracted information into a graph representation o
 
 - targets:
   - min slack / clock period 
-  - slack-derived criticality; exp(-8 * min slack) 
-  - rise/fall max slew
-  - 
+  - slack-derived criticality; exp(-8 * (min slack / clk period)) 
+  - max rise/fall slew
+    
 - edge attribute:
   - intra-cell / inter-cell 
   
@@ -54,14 +54,15 @@ A dataset builder merges all extracted information into a graph representation o
 
 The resulting graphs are converted into PyTorch Geometric (.pt) format for training.
 
-### 5. Model Training (BiGAT / GAT)
+### 5. Model Training (BiGAT)
 
 A bi-directional graph attention network (BiGAT) is trained on the constructed graphs to learn pre-routing timing relationships in digital circuits. 
 
-The model performs node-level prediction of:
-- timing slack  
-- criticality scores  
-- signal slew characteristics  
+Per-pin numerical features are embedded using a shared linear projection, while categorical cell-level attributes (cell type and drive strength) and the clock period are encoded separately and added as learned embeddings.
+
+The model performs node-level prediction of the minimal slack, the maximum rise/fall slew and a slack-derived criticality score. 
+The criticality is computed as exp(-8 * (min slack / clk period)), which maps timing slack to a risk metric that increases as the available timing margin decreases. 
+It serves as the primary target for identifying timing-critical regions of the design and prioritizing pins with the highest likelihood of timing violations.
 
 ## How to Use
 
