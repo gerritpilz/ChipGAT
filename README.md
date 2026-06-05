@@ -185,23 +185,23 @@ In this step, the model is trained on the previously created PyTorch Geometric (
 Hyperparameters are set at the top of the train_model.py file and can be modified there.
 If different clock periods were used for at least one design, the --different_clk_periods flag should be enabled.
 
-´´´bash
+```bash
 python model/model_train.py \
   --pyg_datasets_dir <path_to_pyg_datasets> \
   --cell_to_idx <path_to_cell_to_idx.json> \
   --different_clk_periods
-  ´´´
+```
 
   Example: 
 
-´´´bash
+```bash
 python model/model_train.py \
   --pyg_datasets_dir pyg_datasets \
   --cell_to_idx dataset/lib_sdc/cell_to_idx.json\
   --different_clk_periods
-  ´´´
+```
 
-
+### 7. Timing Prediction
 
 
 
