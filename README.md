@@ -99,13 +99,71 @@ python dataset/chip_run.py \
 Example:
 
 ```bash
-python3 Dataset/chip_run.py \
-  --rtl dataset/designs/slowfil/rtl/*.v \
+python3 dataset/chip_run.py \
+  --rtl dataset/designs/aes/rtl/*.v \
   --sdc dataset/lib_sdc/generic_clk.sdc \
   --clk_period 10 \
-  --design slowfil \
-  --top_module slowfil
+  --design aes \
+  --top_module aes
 ```
+
+### 3. Liberty Parsing
+
+```bash
+python dataset/lib_scd/parse_lib.py \
+  --lib <path_to_lib_file>
+```
+
+Example:
+
+```bash
+python dataset/lib_scd/parse_lib.py \
+  --lib build/aes_10/job0/synthesis/0/inputs/sc_sky130hd_sky130_fd_sc_hd__ss_n40C_1v40.lib
+
+This creates three cell dictionarys.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
