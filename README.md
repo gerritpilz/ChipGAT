@@ -82,14 +82,14 @@ It serves as the primary target for identifying timing-critical regions of the d
 
 3. Install OpenROAD (Required)
 
-  This project requires a working OpenROAD installation, as it is used for feature extraction and netlist processing.
-  Please install OpenROAD following the official instructions:
-  https://github.com/The-OpenROAD-Project/OpenROAD
+This project requires a working OpenROAD installation, as it is used for feature extraction and netlist processing.
+Please install OpenROAD following the official instructions:
+https://github.com/The-OpenROAD-Project/OpenROAD
 
-  After installation, ensure that OpenROAD is accessible from the command line:
-  ```bash
-   openroad -version
-  ```
+After installation, ensure that OpenROAD is accessible from the command line:
+```bash
+openroad -version
+```
 
 ### 2. Design Compilation
 
