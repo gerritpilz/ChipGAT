@@ -84,7 +84,7 @@ create_clock -name clk -period 10 [get_ports clk]
 where `clk` is the clock input of the top-level module and the period is specified in nanoseconds. Note that the pipeline also supports sampling different clock periods for the same design.
 
 
-Next, run the crun_chip.py file:
+Next, run the run_chip.py file:
 
 ```bash
 python dataset/run_chip.py \
@@ -106,14 +106,14 @@ python3 dataset/run_chip.py \
   --top_module aes
 ```
 
-If executed the first time, a new build direcory in the project directory is created, with the first desing in it. The following parsed desings can also be found in the build directory. 
+If executed the first time, a new build directory in the project directory is created, with the first design in it. The following parsed designs can also be found in the build directory. 
 
 ### 3. Liberty Parsing
 
-This step creates three cell dictionarys in the dataset/lib_scd/ directory.
+This step generates three cell dictionary files in Dataset/lib_sdc/cell_dicts/, storing pin direction, pin capacitance, and cell drive strength extracted from the Liberty file.
 
 ```bash
-python dataset/lib_scd/parse_lib.py \
+python dataset/lib_sdc/parse_lib.py \
   --lib <path_to_lib_file>
 ```
 
@@ -126,14 +126,14 @@ python dataset/lib_scd/parse_lib.py \
 
 ### 4. Feature Extraction with OpenROAD
 
-This step generates a pin_features_dir/ directory in the project root, where each design is stored as a separate CSV file containing the extracted pin-level features.
+This step generates a pin_features/ directory inside the Dataset directory. Each design is stored as a separate CSV file containing the extracted pin-level features.
 
 ```bash
 python dataset/run_openroad.py \
   --build_dir <path_to_build_directory> \
   --tcl <path_to_export_per_node_tcl> \
-  --tech_lef <path>
-  --cell_lef <path>
+  --tech_lef <path> \
+  --cell_lef <path> \
   --liberty <path_to_liberty_file>
 ```
 
@@ -150,7 +150,7 @@ python dataset/run_openroad.py \
 
 ### 5. Dataset Construction
 
-This step produces a pyg_datasets/ directory containing the final PyTorch Geometric (.pt) graph files ready for training. Users should carefully inspect the logs, especially for NaN or infinite values, to verify that the dataset generation completed successfully and without numerical issues.
+This step produces a pyg_datasets/ directory containing the final PyTorch Geometric (.pt) graph files ready for training. Users should carefully inspect the logs, especially for NaN or Inf values, to verify that dataset generation completed successfully and numerically stable.
 
 
 ```bash
@@ -163,7 +163,7 @@ python dataset/create_dataset.py \
   --cell_to_idx <path>
 ```
 
-The pin_features_dir/ was created in step 4 (OpenROAD), the cell dictionarys in step 3 (Liberty Parsing).
+The pin_features_dir/ was created in step 4 (OpenROAD), the cell dictionaries in step 3 (Liberty Parsing).
 
 
 Example: 
@@ -171,18 +171,18 @@ Example:
 ```bash
 python dataset/create_dataset.py \
   --build_dir build \
-  --pin_features_dir pin_features_dir \
-  --cell_pin_direction dataset/lib_sdc/cell_pin_direction.json \
-  --cell_pin_cap dataset/lib_sdc/cell_pin_cap.json \
-  --cell_drive_strength dataset/lib_sdc/cell_drive_strength.json\
-  --cell_to_idx dataset/lib_sdc/cell_to_idx.json
+  --pin_features_dir dataset/pin_features_dir \
+  --cell_pin_direction dataset/lib_sdc/cell_dicts/cell_pin_direction.json \
+  --cell_pin_cap dataset/lib_sdc/cell_dicts/cell_pin_cap.json \
+  --cell_drive_strength dataset/lib_sdc/cell_dicts/cell_drive_strength.json\
+  --cell_to_idx dataset/lib_sdc/cell_dicts/cell_to_idx.json
 ```
 
 ### 6. Model Training
 
 In this step, the model is trained on the previously created PyTorch Geometric (.pt) graph files. After the specified number of epochs, the trained model is saved in the checkpoints/ directory. During training, the current training and validation loss, as well as the absolute error of the criticality prediction, are printed to the terminal.
 
-Hyperparameters are set at the top of the train_model.py file and can be modified there.
+Hyperparameters are defined at the top of `model_train.py` and can be modified directly in the script.
 If different clock periods were used for at least one design, the --different_clk_periods flag should be enabled.
 
 ```bash
@@ -197,18 +197,31 @@ python model/model_train.py \
 ```bash
 python model/model_train.py \
   --pyg_datasets_dir pyg_datasets \
-  --cell_to_idx dataset/lib_sdc/cell_to_idx.json\
+  --cell_to_idx dataset/lib_sdc/cell_dicts/cell_to_idx.json\
   --different_clk_periods
 ```
 
 ### 7. Timing Prediction
 
+In this step, a previously parsed digital design (stored as a PyTorch Geometric .pt graph) is passed to the trained BiGAT model to generate per-pin timing predictions. The model outputs node-level estimates for slack, rise/fall slew, and slack-derived criticality, which are automatically written to a CSV file in a default results/ directory.
 
+```bash
+python predict.py \
+  --design_name <design_name> \
+  --checkpoint <path_to_model_checkpoint.pt> \
+  --pyg_graph <path_to_pyg_graph.pt>
+```
 
+Example:
 
+```bash
+python predict.py \
+  --design_name aes \
+  --checkpoint checkpoints/model.pt \
+  --pyg_graph aes.pt
+```
 
-
-
+## Results
 
 
 
