@@ -131,12 +131,12 @@ python3 dataset/run_chip.py \
  --top_module aes
 ```
       
-If executed the first time, a new build directory in the project directory is created, with the first design in it. The following parsed designs can also be found in the build directory. 
+If executed the first time, a new build directory in the project directory is created, with the first design in it. The following parsed designs can also be found in the `build/` directory. 
 
 
 ### 3. Liberty Parsing
 
-This step generates three cell dictionary files in `Dataset/lib_sdc/cell_dicts/`, storing pin direction, pin capacitance, and cell drive strength extracted from the Liberty file.
+This step generates three cell dictionary files in `dataset/lib_sdc/cell_dicts/`, storing pin direction, pin capacitance, and cell drive strength extracted from the Liberty file.
 
 ```bash
 python dataset/lib_sdc/parse_lib.py \
