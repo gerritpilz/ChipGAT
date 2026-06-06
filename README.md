@@ -69,44 +69,25 @@ It serves as the primary target for identifying timing-critical regions of the d
 ## How to Use
 ### 1. Setup
 
-1. Clone Repository
-```bash
- git clone <repo_url>
- cd ChipGAT
-```
-
+1. Clone the repo
+   ```bash
+   git clone <repo_url>
+   cd ChipGAT
+   ```
 2. Install Dependencies
-```bash
- pip install -r requirements.txt
-```
-
+   ```bash
+   pip install -r requirements.txt
+   ```
 3. Install OpenROAD (Required)
-
-This project requires a working OpenROAD installation, as it is used for feature extraction and netlist processing.
-Please install OpenROAD following the official instructions:
-https://github.com/The-OpenROAD-Project/OpenROAD
-
-After installation, ensure that OpenROAD is accessible from the command line:
-```bash
-openroad -version
-```
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
+   This project requires a working OpenROAD installation, as it is used for feature extraction and netlist processing. 
+   Please install OpenROAD following the official instructions:
+   https://github.com/The-OpenROAD-Project/OpenROAD
+   
+   After installation, ensure that OpenROAD is accessible from the command line:
+   ```bash
+   openroad -version
    ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-5. Change git remote url to avoid accidental pushes to base project
-   ```sh
-   git remote set-url origin github_username/repo_name
-   git
+   
 ### 2. Design Compilation
 
 All paths are relative to the repository root. A generic sdc file is already included at Dataset/lib_sdc. 
