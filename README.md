@@ -37,7 +37,7 @@ A dataset builder merges all extracted information into a graph representation o
 
 - node features:
   - cell ID
-  - log2(cell drive strength)
+  - cell drive strength
   - pin direction  
   - log1p(fanout)  
   - input/output depth  
