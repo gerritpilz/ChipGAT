@@ -90,7 +90,23 @@ After installation, ensure that OpenROAD is accessible from the command line:
 ```bash
 openroad -version
 ```
-
+1. Get a free API Key at [https://example.com](https://example.com)
+2. Clone the repo
+   ```sh
+   git clone https://github.com/github_username/repo_name.git
+   ```
+3. Install NPM packages
+   ```sh
+   npm install
+   ```
+4. Enter your API in `config.js`
+   ```js
+   const API_KEY = 'ENTER YOUR API';
+   ```
+5. Change git remote url to avoid accidental pushes to base project
+   ```sh
+   git remote set-url origin github_username/repo_name
+   git
 ### 2. Design Compilation
 
 All paths are relative to the repository root. A generic sdc file is already included at Dataset/lib_sdc. 
