@@ -146,7 +146,7 @@ python dataset/lib_sdc/parse_lib.py \
 Example:
 
 ```bash
-python dataset/lib_scd/parse_lib.py \
+python dataset/lib_sdc/parse_lib.py \
   --lib build/aes_10/job0/synthesis/0/inputs/sc_sky130hd_sky130_fd_sc_hd__ss_n40C_1v40.lib
 ```
 
