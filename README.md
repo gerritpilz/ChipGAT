@@ -296,40 +296,13 @@ Synthesized netlists and extracted features are provided in `examples/netlists/`
 
 ## Provided Artifacts
 
-|
- Artifact                  
-|
- Location                   
-|
-|
----------------------------
-|
-----------------------------
-|
-|
- Synthesized netlists      
-|
-`examples/designs/`
-|
-|
- Extracted pin features    
-|
-`examples/pin_features_dict/`
-|
- Liberty cell dictionaries 
-|
-`examples/cell_dicts/`
-|
-|
- PyG graph datasets        
-|
-`examples/pyg_datasets/`
-|
-|
- Pretrained BiGAT checkpoint 
-|
-`examples/checkpoints/`
-|
+| Artifact                    | Location                       |
+|-----------------------------|--------------------------------|
+| Synthesized netlists        | `examples/designs/`            |
+| Extracted pin features      | `examples/pin_features_dict/`  |
+| Liberty cell dictionaries   | `examples/cell_dicts/`         |
+| PyG graph datasets          | `examples/pyg_datasets/`       |
+| Pretrained BiGAT checkpoint | `examples/checkpoints/`        |
 
 
 
