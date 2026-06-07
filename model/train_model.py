@@ -152,7 +152,7 @@ if __name__ == "__main__":
                 losses = estimate_loss()
 
                 print(f"train loss: {losses['train']['loss']:.4f} | val loss: {losses['val']['loss']:.4f}")
-                print(f"val abs error crit error: {losses['val']['abs_error_crit'].cpu().numpy()}")
+                print(f"val abs error crit error: {losses['val']['abs_error_crit']}")
                 print("")
 
         torch.cuda.empty_cache()
