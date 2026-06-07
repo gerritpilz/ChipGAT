@@ -17,7 +17,7 @@ dropout = 0.1
 crit_weight=5.0
 
 lr = 1e-3
-n_epochs = 50
+n_epochs = 300
 eval_iter = 4
 n_eval_batches = 4
 val_split = 0.8
@@ -36,29 +36,17 @@ def calc_train_loss(pred, y, mask, crit_weight=5.0):
 
     return loss
 
-def calc_crit_mae(pred, y, mask, clk_period, batch_idx):
+def calc_crit_mae(pred, y, mask):
 
     pred_valid = pred[mask]
     y_valid = y[mask]
-    clk_valid = clk_period[batch_idx][mask]
 
-    # MAE loss crit_slack
-    crit_pred = pred_valid[:, 3]
-    crit_y = y_valid[:, 3]
-
-    crit_pred_clipped = torch.clamp(crit_pred, min=1e-7, max=1.0)
-    crit_y_clipped = torch.clamp(crit_y, min=1e-7, max=1.0)
-
-    crit_slack_pred = (-clk_valid / 8) * torch.log(crit_pred_clipped)
-    crit_slack_y = (-clk_valid / 8) * torch.log(crit_y_clipped)
-
-    crit_slack_mae = F.l1_loss(crit_slack_pred, crit_slack_y)
-
-    # other MAE losses
+    # MAE losses
     slack_mae = F.l1_loss(pred_valid[:, 0], y_valid[:, 0])
     slew_mae = F.l1_loss(pred_valid[:, 1:3], y_valid[:, 1:3])
+    crit_mae = F.l1_loss(pred_valid[:, 3], y_valid[:, 3])
 
-    return crit_slack_mae, slack_mae, slew_mae
+    return crit_mae, slack_mae, slew_mae
 
 
 @torch.no_grad()
@@ -94,13 +82,8 @@ def estimate_loss():
             loss = calc_train_loss(pred, batch.y, mask)
             losses.append(loss.item())
 
-            # absolute error criticality
-            crit_slack_mae, slack_mae, slew_mae = calc_crit_mae(
-                pred,
-                batch.y,
-                mask,
-                batch.clk_period,
-                batch.batch)
+            # MAE losses
+            crit_slack_mae, slack_mae, slew_mae = calc_crit_mae(pred, batch.y, mask)
 
             crit_slack_mae_list.append(crit_slack_mae.item())
             slack_mae_list.append(slack_mae.item())
@@ -108,7 +91,7 @@ def estimate_loss():
 
         out[split] = {
             'loss': sum(losses) / len(losses),
-            'crit_slack_mae': sum(crit_slack_mae_list) / len(crit_slack_mae_list),
+            'crit_mae': sum(crit_slack_mae_list) / len(crit_slack_mae_list),
             'slack_mae': sum(slack_mae_list) / len(slack_mae_list),
             'slew_mae': sum(slew_mae_list) / len(slew_mae_list),
         }
