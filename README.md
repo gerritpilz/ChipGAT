@@ -299,7 +299,7 @@ The corresponding PyG graph datasets are provided in `examples/pyg_datasets/`.
 | Artifact                    | Location                       |
 |-----------------------------|--------------------------------|
 | RTL files of designs        | `examples/designs/`            |
-| Extracted pin features      | `examples/pin_features_dict/`  |
+| Extracted pin features      | `examples/pin_features_dir/`  |
 | Liberty cell dictionaries   | `examples/cell_dicts/`         |
 | PyG graph datasets          | `examples/pyg_datasets/`       |
 | Pretrained BiGAT checkpoint | `examples/checkpoints/`        |
