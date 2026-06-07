@@ -36,11 +36,26 @@ def calc_train_loss(pred, y, mask, crit_weight=5.0):
 
     return loss
 
-def calc_crit_mae(pred, y, mask):
+def calc_crit_mae(pred, y, mask, clk_period, batch_idx):
+
     pred_valid = pred[mask]
     y_valid = y[mask]
+    clk_valid = clk_period[batch_idx][mask]
 
-    return F.l1_loss(pred_valid[:, 3], y_valid[:, 3])
+    # MAE loss crit_slack
+    crit_pred = pred_valid[:, 3]
+    crit_y = y_valid[:, 3]
+
+    crit_slack_pred = -clk_valid / 8 * torch.log(crit_pred)
+    crit_slack_y = -clk_valid/ 8 * torch.log(crit_y)
+
+    crit_slack_mae = F.l1_loss(crit_slack_pred, crit_slack_y)
+
+    # other MAE losses
+    slack_mae = F.l1_loss(pred_valid[:, 0], y_valid[:, 0])
+    slew_mae = F.l1_loss(pred_valid[:, 1:3], y_valid[:, 1:3])
+
+    return crit_slack_mae, slack_mae, slew_mae
 
 
 @torch.no_grad()
@@ -52,7 +67,9 @@ def estimate_loss():
     for split, loader in [('train', train_loader), ('val', val_loader)]:
 
         losses = []
-        abs_errors_crit = []
+        crit_slack_mae_list = []
+        slack_mae_list = []
+        slew_mae_list = []
 
         for it, batch in enumerate(loader):
             if it == n_eval_batches:
@@ -75,12 +92,22 @@ def estimate_loss():
             losses.append(loss.item())
 
             # absolute error criticality
-            abs_error = calc_crit_mae(pred, batch.y, mask)
-            abs_errors_crit.append(abs_error.item())
+            crit_slack_mae, slack_mae, slew_mae = calc_crit_mae(
+                pred,
+                batch.y,
+                mask,
+                batch.clk_period,
+                batch.batch)
+
+            crit_slack_mae_list.append(crit_slack_mae.item())
+            slack_mae_list.append(slack_mae.item())
+            slew_mae_list.append(slew_mae.item())
 
         out[split] = {
             'loss': sum(losses) / len(losses),
-            'abs_error_crit': sum(abs_errors_crit) / len(abs_errors_crit)
+            'crit_slack_mae': sum(crit_slack_mae_list) / len(crit_slack_mae_list),
+            'slack_mae': sum(slack_mae_list) / len(slack_mae_list),
+            'slew_mae': sum(slew_mae_list) / len(slew_mae_list),
         }
 
     model.train()
@@ -152,7 +179,9 @@ if __name__ == "__main__":
                 losses = estimate_loss()
 
                 print(f"train loss: {losses['train']['loss']:.4f} | val loss: {losses['val']['loss']:.4f}")
-                print(f"val abs error crit error: {losses['val']['abs_error_crit']}")
+                print(f"val crit slack MAE: {losses['val']['crit_slack_mae']}")
+                print(f"val slack MAE: {losses['val']['slack_mae']}")
+                print(f"val slew MAE: {losses['val']['slew_mae']}")
                 print("")
 
         torch.cuda.empty_cache()
