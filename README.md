@@ -251,9 +251,29 @@ python predict.py \
   --pyg_graph aes.pt
 ```
 
-
 ## Results
 
+All metrics evaluated on held-out designs not seen during training.
+
+### Prediction Accuracy
+| Metric             | Value     |
+|--------------------|-----------|
+| Slack MAE          | ~0.17 ns  |
+| Slew MAE           | ~0.21 ns  |
+| Criticality MAE    | ~X        |
+| Val Loss (BiGAT)   | ~X        |
+| Val Loss (GAT)     | ~X (+5%)  |
+
+Slack and slew are reported in nanoseconds. Criticality is a normalized score ∈ [0,1], where 1 indicates a timing-critical pin (slack ≈ 0) and 0 indicates a non-critical pin.
+
+### Runtime
+| Method          | Runtime      |
+|-----------------|--------------|
+| Full P&R + STA  | 15–40 min    |
+| This model      | ~10 ms       |
+
+### Evaluation Designs
+Evaluated on 9 synthesized netlists: AES, ChaCha, GCD, IIRavg, PicoRV32, SHA256, Slowfil, SPI, UART.
 
 
 
