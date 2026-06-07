@@ -2,7 +2,7 @@ import os
 import argparse
 import torch
 import pandas as pd
-from GAT_model import GAT_model
+from BiGAT_model import BiGAT_model
 
 parser = argparse.ArgumentParser()
 
@@ -18,7 +18,7 @@ args = parser.parse_args()
 checkpoint = torch.load(args.checkpoint, map_location='cpu')
 config = checkpoint['model_config']
 
-model = GAT_model(**config)
+model = BiGAT_model(**config)
 model.load_state_dict(checkpoint['model_state'])
 model.eval()
 

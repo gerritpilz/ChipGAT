@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.loader import DataLoader
-from GAT_model import GAT_model
+from BiGAT_model import BiGAT_model
 import argparse
 import os
 import json
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    model = GAT_model(
+    model = BiGAT_model(
         n_cells=n_cells,
         n_features=n_features,
         n_targets=n_targets,
@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
         torch.cuda.empty_cache()
 
-    os.makedirs('/content/drive/MyDrive/checkpoints', exist_ok=True)
+    os.makedirs('/checkpoints', exist_ok=True)
 
     torch.save({
         'model_state': model.state_dict(),
@@ -186,7 +186,7 @@ if __name__ == "__main__":
             'dropout':    dropout,
             'clks':       args.different_clk_periods
         }
-    }, '/content/drive/MyDrive/checkpoints/model.pt')
+    }, '/checkpoints/model.pt')
 
     # N ... total number nodes
     # E ... total number edges
