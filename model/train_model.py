@@ -46,8 +46,11 @@ def calc_crit_mae(pred, y, mask, clk_period, batch_idx):
     crit_pred = pred_valid[:, 3]
     crit_y = y_valid[:, 3]
 
-    crit_slack_pred = -clk_valid / 8 * torch.log(crit_pred)
-    crit_slack_y = -clk_valid/ 8 * torch.log(crit_y)
+    crit_pred_clipped = torch.clamp(crit_pred, min=1e-7, max=1.0)
+    crit_y_clipped = torch.clamp(crit_y, min=1e-7, max=1.0)
+
+    crit_slack_pred = (-clk_valid / 8) * torch.log(crit_pred_clipped)
+    crit_slack_y = (-clk_valid / 8) * torch.log(crit_y_clipped)
 
     crit_slack_mae = F.l1_loss(crit_slack_pred, crit_slack_y)
 
