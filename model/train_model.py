@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
         torch.cuda.empty_cache()
 
-    os.makedirs('/checkpoints', exist_ok=True)
+    os.makedirs('/content/drive/MyDrive/checkpoints', exist_ok=True)
 
     torch.save({
         'model_state': model.state_dict(),
@@ -186,7 +186,7 @@ if __name__ == "__main__":
             'dropout':    dropout,
             'clks':       args.different_clk_periods
         }
-    }, '/checkpoints/model.pt')
+    }, '/content/drive/MyDrive/checkpoints/model.pt')
 
     # N ... total number nodes
     # E ... total number edges
