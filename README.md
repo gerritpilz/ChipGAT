@@ -305,7 +305,8 @@ The corresponding PyG graph datasets are provided in `examples/pyg_datasets/`.
 | Extracted pin features      | `examples/pin_features_dir/`  |
 | Liberty cell dictionaries   | `examples/cell_dicts/`         |
 | PyG graph datasets          | `examples/pyg_datasets/`       |
-| Pretrained BiGAT checkpoint | `examples/checkpoints/`        |
+| Pretrained BiGAT checkpoint | `examples/checkpoint.pt`        |
+|Baseline GAT model           | `examples/unidirectional_GAT.py` 
 
 
 
